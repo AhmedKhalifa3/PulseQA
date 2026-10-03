@@ -280,9 +280,15 @@ function renderMessage(msg) {
 
     let audioHtml = "";
     if (msg.audio && msg.audio_url) {
+        const encodedText = encodeURIComponent(msg.text);
         audioHtml = `
             <div class="audio-player-box" data-testid="audio-player-${msg.id}">
-                <audio controls src="${msg.audio_url}"></audio>
+                <audio controls preload="auto" src="${msg.audio_url}"></audio>
+                <div class="audio-actions">
+                    <button type="button" class="btn-voice-read" onclick="readAloud(decodeURIComponent('${encodedText}'))">
+                        🗣️ Speak Voice
+                    </button>
+                </div>
             </div>
         `;
     }
@@ -324,4 +330,18 @@ function escapeHtml(str) {
               .replace(/>/g, "&gt;")
               .replace(/"/g, "&quot;")
               .replace(/'/g, "&#039;");
+}
+
+function readAloud(text) {
+    if (!("speechSynthesis" in window)) {
+        alert("Speech synthesis is not supported by your current browser.");
+        return;
+    }
+    window.speechSynthesis.cancel();
+    // Strip '[Audio Note: XX]' tag from spoken output
+    const cleanText = text.replace(/^\[Audio Note: [A-Z]+\]\s*/, "");
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
 }

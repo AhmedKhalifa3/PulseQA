@@ -393,8 +393,34 @@ body {
 }
 
 .audio-player-box audio {
-    width: 240px;
-    height: 32px;
+    width: 260px;
+    height: 36px;
+    outline: none;
+}
+
+.audio-actions {
+    margin-top: 6px;
+    display: flex;
+    gap: 8px;
+}
+
+.btn-voice-read {
+    background: #0284c7;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s ease;
+}
+
+.btn-voice-read:hover {
+    background: #0369a1;
 }
 
 /* Stress simulation drawer */
