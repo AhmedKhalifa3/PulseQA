@@ -18,6 +18,7 @@ htmlcov/
 reports/screenshots/
 reports/telemetry/
 reports/*.html
+reports/allure-results/
 
 # Environment Variables
 .env
