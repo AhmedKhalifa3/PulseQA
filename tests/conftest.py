@@ -29,6 +29,22 @@ logger = logging.getLogger("PulseQA.Conftest")
 # Global TestRail plugin instance
 testrail_plugin = TestRailPytestPlugin()
 
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--headed",
+        action="store_true",
+        default=False,
+        help="Run browser in non-headless (headed / visible) mode"
+    )
+    parser.addoption(
+        "--browser-name",
+        action="store",
+        default=None,
+        help="Target browser: chrome or firefox"
+    )
+
+
 def pytest_configure(config):
     config.pluginmanager.register(testrail_plugin, name="pulseqa_testrail")
 
@@ -90,8 +106,13 @@ def api_client(target_app_server) -> Generator[PulseApiClient, None, None]:
 def driver(request, target_app_server) -> Generator[WebDriver, None, None]:
     """
     Instantiates Selenium WebDriver with auto-teardown and screenshot-on-failure.
+    Supports --headed CLI flag or HEADLESS=false environment variable.
     """
-    browser_driver = WebDriverFactory.create_driver()
+    headed_flag = request.config.getoption("--headed", default=False)
+    browser_option = request.config.getoption("--browser-name", default=None)
+
+    is_headless = False if headed_flag else settings.HEADLESS
+    browser_driver = WebDriverFactory.create_driver(browser_name=browser_option, headless=is_headless)
     yield browser_driver
 
     # Capture failure screenshot
