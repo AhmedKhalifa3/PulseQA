@@ -3,6 +3,7 @@ Web UI Authentication Test Suite.
 Tests login, invalid credential handling, and logout using Page Object Model.
 """
 
+import allure
 import pytest
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -10,11 +11,15 @@ from pages.chat_page import ChatPage
 from pages.login_page import LoginPage
 
 
+@allure.epic("PulseChat Web UI")
+@allure.feature("Authentication & Session Lifecycle")
 @pytest.mark.web
 @pytest.mark.smoke
 @pytest.mark.testrail(101)
 class TestWebAuth:
 
+    @allure.story("Valid User Login Navigation")
+    @allure.severity(allure.severity_level.BLOCKER)
     def test_successful_login(self, driver: WebDriver, target_app_server: str):
         """Verifies valid user credentials successfully navigate to main chat view."""
         login_page = LoginPage(driver)

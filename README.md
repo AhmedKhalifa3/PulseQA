@@ -215,12 +215,29 @@ pytest -m regression -v
 
 When `@pytest.mark.performance` tests execute, the `ResourceMonitor` tracks the process tree and produces high-resolution plots:
 
-```plaintext
-reports/telemetry/test_chat_workflow_resource_limits_resource_curve.png
-├── Left Axis (Cyan): CPU Usage (%) with SLA Limit Line
-├── Right Axis (Orange): Memory RSS (MB) with Growth Delta
-└── Metadata Card: Peak CPU, Average CPU, Peak RAM, and Total Duration
+<div align="center">
+  <img src="docs/images/sample_telemetry_curve.png" alt="PulseQA Telemetry Curve" width="800"/>
+</div>
+
+- **Left Axis (Cyan)**: Real-time CPU Utilization (%) across the full browser process tree.
+- **Right Axis (Orange)**: Resident Set Size (RSS) Memory in Megabytes over elapsed time.
+- **Metadata Card**: Auto-calculated Peak CPU, Average CPU, Peak RAM, and Memory Growth delta for leak detection.
+
+---
+
+## 📈 Allure Interactive Test Reporting
+
+PulseQA integrates with `allure-pytest` to generate interactive test dashboards with embedded hardware telemetry graphs and failure screenshots.
+
+```bash
+# Generate and open the interactive Allure Dashboard
+allure serve reports/allure-results
 ```
+
+Features included in Allure:
+- Categorized Epics: **PulseChat API**, **PulseChat Web UI**, **PulseChat Mobile**, and **Hardware Telemetry**.
+- Embedded dual-axis CPU/RAM charts attached directly to test results.
+- Full-page failure screenshots on UI assertion breaches.
 
 ---
 

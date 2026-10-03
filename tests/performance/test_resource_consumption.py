@@ -6,6 +6,7 @@ Directly substantiates the Resource Consumption Framework concept-to-deployment 
 
 import time
 
+import allure
 import pytest
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -16,11 +17,15 @@ from telemetry.cdp_metrics import CDPMetricsExtractor
 from telemetry.thresholds import assert_resource_limits
 
 
+@allure.epic("PulseQA Hardware Telemetry")
+@allure.feature("Browser Resource Profiling & SLA Assertions")
 @pytest.mark.performance
 @pytest.mark.regression
 @pytest.mark.testrail(105)
 class TestResourceConsumption:
 
+    @allure.story("Continuous Browser CPU & RAM Tracking")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_chat_workflow_resource_limits(self, driver: WebDriver, target_app_server: str, telemetry_monitor, request):
         """
         Executes an intensive chat session while continuous background telemetry monitors

@@ -102,6 +102,15 @@ def driver(request, target_app_server) -> Generator[WebDriver, None, None]:
             os.makedirs(os.path.dirname(screenshot_path), exist_ok=True)
             browser_driver.save_screenshot(screenshot_path)
             logger.info(f"Captured failure screenshot: {screenshot_path}")
+            try:
+                import allure
+                allure.attach.file(
+                    screenshot_path,
+                    name=f"Failure Screenshot - {test_name}",
+                    attachment_type=allure.attachment_type.PNG
+                )
+            except Exception:
+                pass
         except Exception as e:
             logger.warning(f"Could not take screenshot: {e}")
 
@@ -139,6 +148,31 @@ def telemetry_monitor(request) -> Generator[ResourceMonitor, None, None]:
         max_ram_threshold=settings.MAX_ALLOWED_RAM_MB
     )
     logger.info(f"Telemetry report for {test_name}: {chart_path}")
+
+    # Attach telemetry chart and metrics card to Allure
+    try:
+        import allure
+        if chart_path and os.path.exists(chart_path):
+            allure.attach.file(
+                chart_path,
+                name=f"Hardware Telemetry Curve - {test_name}",
+                attachment_type=allure.attachment_type.PNG
+            )
+            summary_text = (
+                f"Test: {result.test_name}\n"
+                f"Duration: {result.duration_sec:.2f}s\n"
+                f"Peak CPU: {result.peak_cpu_percent:.1f}%\n"
+                f"Avg CPU: {result.avg_cpu_percent:.1f}%\n"
+                f"Peak RAM: {result.peak_memory_rss_mb:.1f} MB\n"
+                f"Memory Growth: {result.memory_growth_mb:+.1f} MB\n"
+            )
+            allure.attach(
+                summary_text,
+                name="Resource SLA Metrics Summary",
+                attachment_type=allure.attachment_type.TEXT
+            )
+    except Exception:
+        pass
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
