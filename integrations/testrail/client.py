@@ -31,7 +31,7 @@ class TestRailClient:
         base_url: str | None = None,
         user: str | None = None,
         api_key: str | None = None,
-        mock_mode: bool | None = None
+        mock_mode: bool | None = None,
     ):
         self.base_url = (base_url or settings.TESTRAIL_URL).rstrip("/")
         self.user = user or settings.TESTRAIL_USER
@@ -55,18 +55,13 @@ class TestRailClient:
                 "suite_id": suite_id,
                 "name": name,
                 "description": description,
-                "created_on": time.time()
+                "created_on": time.time(),
             }
             logger.info(f"[TestRail Mock] Created run ID #{mock_run_id}: '{name}'")
             return mock_run_id
 
         url = f"{self.base_url}/index.php?/api/v2/add_run/{project_id}"
-        payload = {
-            "suite_id": suite_id,
-            "name": name,
-            "description": description,
-            "include_all": True
-        }
+        payload = {"suite_id": suite_id, "name": name, "description": description, "include_all": True}
         res = self.session.post(url, json=payload)
         if res.status_code != 200:
             raise TestRailSyncError(f"Failed to create TestRail run: {res.status_code} - {res.text}")

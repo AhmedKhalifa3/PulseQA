@@ -32,17 +32,9 @@ testrail_plugin = TestRailPytestPlugin()
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--headed",
-        action="store_true",
-        default=False,
-        help="Run browser in non-headless (headed / visible) mode"
+        "--headed", action="store_true", default=False, help="Run browser in non-headless (headed / visible) mode"
     )
-    parser.addoption(
-        "--browser-name",
-        action="store",
-        default=None,
-        help="Target browser: chrome or firefox"
-    )
+    parser.addoption("--browser-name", action="store", default=None, help="Target browser: chrome or firefox")
 
 
 def pytest_configure(config):
@@ -51,6 +43,7 @@ def pytest_configure(config):
 
 def get_free_port() -> int:
     import socket
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("127.0.0.1", 0))
         return s.getsockname()[1]
@@ -125,10 +118,11 @@ def driver(request, target_app_server) -> Generator[WebDriver, None, None]:
             logger.info(f"Captured failure screenshot: {screenshot_path}")
             try:
                 import allure
+
                 allure.attach.file(
                     screenshot_path,
                     name=f"Failure Screenshot - {test_name}",
-                    attachment_type=allure.attachment_type.PNG
+                    attachment_type=allure.attachment_type.PNG,
                 )
             except Exception:
                 pass
@@ -166,18 +160,17 @@ def telemetry_monitor(request) -> Generator[ResourceMonitor, None, None]:
         result=result,
         output_dir="reports/telemetry",
         max_cpu_threshold=settings.MAX_ALLOWED_CPU_PCT,
-        max_ram_threshold=settings.MAX_ALLOWED_RAM_MB
+        max_ram_threshold=settings.MAX_ALLOWED_RAM_MB,
     )
     logger.info(f"Telemetry report for {test_name}: {chart_path}")
 
     # Attach telemetry chart and metrics card to Allure
     try:
         import allure
+
         if chart_path and os.path.exists(chart_path):
             allure.attach.file(
-                chart_path,
-                name=f"Hardware Telemetry Curve - {test_name}",
-                attachment_type=allure.attachment_type.PNG
+                chart_path, name=f"Hardware Telemetry Curve - {test_name}", attachment_type=allure.attachment_type.PNG
             )
             summary_text = (
                 f"Test: {result.test_name}\n"
@@ -188,9 +181,7 @@ def telemetry_monitor(request) -> Generator[ResourceMonitor, None, None]:
                 f"Memory Growth: {result.memory_growth_mb:+.1f} MB\n"
             )
             allure.attach(
-                summary_text,
-                name="Resource SLA Metrics Summary",
-                attachment_type=allure.attachment_type.TEXT
+                summary_text, name="Resource SLA Metrics Summary", attachment_type=allure.attachment_type.TEXT
             )
     except Exception:
         pass

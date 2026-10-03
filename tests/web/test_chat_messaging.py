@@ -15,7 +15,6 @@ from pages.login_page import LoginPage
 @pytest.mark.regression
 @pytest.mark.testrail(102)
 class TestChatMessaging:
-
     @pytest.fixture(autouse=True)
     def setup_chat(self, driver: WebDriver, target_app_server: str):
         login_page = LoginPage(driver)

@@ -23,7 +23,6 @@ from telemetry.thresholds import assert_resource_limits
 @pytest.mark.regression
 @pytest.mark.testrail(105)
 class TestResourceConsumption:
-
     @allure.story("Continuous Browser CPU & RAM Tracking")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_chat_workflow_resource_limits(self, driver: WebDriver, target_app_server: str, telemetry_monitor, request):
@@ -51,12 +50,7 @@ class TestResourceConsumption:
         assert len(result.samples) > 0, "Expected telemetry samples to be collected during test"
 
         # Assert resource limits (Multi-core process tree: max 85% average CPU, max 250% peak burst, max 1500MB RAM)
-        assert_resource_limits(
-            result,
-            max_avg_cpu_pct=85.0,
-            max_cpu_pct=250.0,
-            max_ram_mb=1500.0
-        )
+        assert_resource_limits(result, max_avg_cpu_pct=85.0, max_cpu_pct=250.0, max_ram_mb=1500.0)
 
     def test_cdp_internal_heap_metrics(self, driver: WebDriver, target_app_server: str):
         """

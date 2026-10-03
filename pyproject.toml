@@ -13,3 +13,16 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "tests/*" = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "api",
+    "core",
+    "integrations",
+    "pages",
+    "security_compliance",
+    "target_app",
+    "telemetry",
+    "tests",
+]
+

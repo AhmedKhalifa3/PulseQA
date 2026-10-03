@@ -130,7 +130,7 @@ class ResourceMonitor:
                     cpu_percent=round(total_cpu, 2),
                     memory_rss_mb=round(total_rss_bytes / (1024 * 1024), 2),
                     memory_vms_mb=round(total_vms_bytes / (1024 * 1024), 2),
-                    thread_count=total_threads
+                    thread_count=total_threads,
                 )
                 self._samples.append(sample)
 

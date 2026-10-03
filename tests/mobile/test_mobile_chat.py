@@ -14,7 +14,6 @@ from core.drivers.mobile_driver_factory import MobileDriverFactory
 @pytest.mark.regression
 @pytest.mark.testrail(104)
 class TestMobileChat:
-
     def test_mobile_driver_session_initialization(self, mobile_driver):
         """Verifies Mobile WebDriver successfully establishes session and navigates."""
         mobile_driver.get(settings.BASE_URL)
@@ -30,6 +29,7 @@ class TestMobileChat:
 
         # Confirm responsive container adapts
         from pages.login_page import LoginPage
+
         login_page = LoginPage(driver)
         assert login_page.is_login_screen_visible()
 
@@ -37,6 +37,7 @@ class TestMobileChat:
         login_page.login_as("qa_automator", "securepass")
 
         from pages.chat_page import ChatPage
+
         chat_page = ChatPage(driver)
         assert chat_page.is_loaded()
         assert chat_page.get_current_user_name() == "qa_automator"

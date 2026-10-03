@@ -12,7 +12,6 @@ from api.schemas import LoginResponse
 @pytest.mark.smoke
 @pytest.mark.testrail(201)
 class TestAuthApi:
-
     def test_login_success(self, api_client: PulseApiClient):
         """Verifies valid login returns 200, auth token, and adheres to schema."""
         res = api_client.login("qa_automator", "securepass")

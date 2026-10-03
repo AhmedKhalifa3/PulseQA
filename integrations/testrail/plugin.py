@@ -31,7 +31,7 @@ class TestRailPytestPlugin:
                     project_id=settings.TESTRAIL_PROJECT_ID,
                     suite_id=settings.TESTRAIL_SUITE_ID,
                     name=run_name,
-                    description="Executed automatically by PulseQA CI/CD test runner."
+                    description="Executed automatically by PulseQA CI/CD test runner.",
                 )
                 logger.info(f"TestRail integration initialized. Run ID: {self.run_id}")
             except Exception as e:
@@ -53,17 +53,21 @@ class TestRailPytestPlugin:
                     if report.failed:
                         comment += f"\nFailure: {report.longreprtext[:300]}"
 
-                    self.results_queue.append({
-                        "case_id": int(case_id),
-                        "status_id": status_id,
-                        "elapsed": f"{max(int(report.duration), 1)}s",
-                        "comment": comment
-                    })
+                    self.results_queue.append(
+                        {
+                            "case_id": int(case_id),
+                            "status_id": status_id,
+                            "elapsed": f"{max(int(report.duration), 1)}s",
+                            "comment": comment,
+                        }
+                    )
 
     def pytest_sessionfinish(self, session, exitstatus):
         if settings.TESTRAIL_ENABLED and self.run_id and self.results_queue:
             try:
                 self.client.add_results_for_cases(self.run_id, self.results_queue)
-                logger.info(f"Successfully uploaded {len(self.results_queue)} test results to TestRail Run #{self.run_id}")
+                logger.info(
+                    f"Successfully uploaded {len(self.results_queue)} test results to TestRail Run #{self.run_id}"
+                )
             except Exception as e:
                 logger.error(f"Failed uploading TestRail results: {e}")

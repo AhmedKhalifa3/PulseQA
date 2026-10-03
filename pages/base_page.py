@@ -37,14 +37,18 @@ class BasePage:
         try:
             return wait.until(EC.visibility_of_element_located(locator))
         except TimeoutException:
-            raise ElementTimeoutException(f"Timed out waiting for element {locator} to become visible after {timeout or self.timeout}s")
+            raise ElementTimeoutException(
+                f"Timed out waiting for element {locator} to become visible after {timeout or self.timeout}s"
+            )
 
     def wait_for_element_clickable(self, locator: tuple[str, str], timeout: int | None = None) -> WebElement:
         wait = WebDriverWait(self.driver, timeout or self.timeout)
         try:
             return wait.until(EC.element_to_be_clickable(locator))
         except TimeoutException:
-            raise ElementTimeoutException(f"Timed out waiting for element {locator} to be clickable after {timeout or self.timeout}s")
+            raise ElementTimeoutException(
+                f"Timed out waiting for element {locator} to be clickable after {timeout or self.timeout}s"
+            )
 
     def wait_for_element_invisible(self, locator: tuple[str, str], timeout: int | None = None) -> bool:
         wait = WebDriverWait(self.driver, timeout or self.timeout)

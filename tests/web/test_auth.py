@@ -17,7 +17,6 @@ from pages.login_page import LoginPage
 @pytest.mark.smoke
 @pytest.mark.testrail(101)
 class TestWebAuth:
-
     @allure.story("Valid User Login Navigation")
     @allure.severity(allure.severity_level.BLOCKER)
     def test_successful_login(self, driver: WebDriver, target_app_server: str):

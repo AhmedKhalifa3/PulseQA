@@ -13,7 +13,6 @@ from api.schemas import SystemHealthResponse
 @pytest.mark.regression
 @pytest.mark.testrail(203)
 class TestSystemStressApi:
-
     def test_system_health_telemetry_endpoint(self, api_client: PulseApiClient):
         """Validates system health telemetry API output."""
         res = api_client.get_health()

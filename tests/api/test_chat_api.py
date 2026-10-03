@@ -12,7 +12,6 @@ from api.schemas import RoomMessagesResponse
 @pytest.mark.regression
 @pytest.mark.testrail(202)
 class TestChatApi:
-
     def test_get_rooms(self, api_client: PulseApiClient):
         """Verifies room discovery returns default configured rooms."""
         res = api_client.get_rooms()

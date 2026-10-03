@@ -19,7 +19,7 @@ KNOWN_ADVISORIES = [
         "severity": "CRITICAL",
         "cvss_score": 8.8,
         "description": "Heap buffer overflow in WebP in Google Chrome/CEF prior to 116.0.5845.187",
-        "mitigation": "Upgraded browser dependencies and verified memory bounds."
+        "mitigation": "Upgraded browser dependencies and verified memory bounds.",
     },
     {
         "cve_id": "CVE-2023-5217",
@@ -27,9 +27,10 @@ KNOWN_ADVISORIES = [
         "severity": "HIGH",
         "cvss_score": 8.8,
         "description": "Heap buffer overflow in vp8 encoding in Google Chrome/CEF prior to 117.0.5938.132",
-        "mitigation": "Patched VP8 encoder pipeline."
-    }
+        "mitigation": "Patched VP8 encoder pipeline.",
+    },
 ]
+
 
 def scan_vulnerabilities(output_report: str = "reports/compliance/cve_triage_report.json") -> dict[str, Any]:
     os.makedirs(os.path.dirname(output_report), exist_ok=True)
@@ -39,13 +40,14 @@ def scan_vulnerabilities(output_report: str = "reports/compliance/cve_triage_rep
         "status": "COMPLIANT",
         "audited_advisories": len(KNOWN_ADVISORIES),
         "vulnerabilities_found": 0,
-        "details": KNOWN_ADVISORIES
+        "details": KNOWN_ADVISORIES,
     }
 
     with open(output_report, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
 
     return report
+
 
 if __name__ == "__main__":
     rep = scan_vulnerabilities()

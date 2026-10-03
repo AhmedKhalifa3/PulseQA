@@ -43,7 +43,7 @@ class CDPMetricsExtractor:
                 "js_heap_total_mb": js_heap_total_mb,
                 "dom_nodes": dom_nodes,
                 "layout_count": layout_count,
-                "raw_metrics_count": len(metrics_dict)
+                "raw_metrics_count": len(metrics_dict),
             }
         except Exception as e:
             logger.warning(f"Failed to query CDP metrics: {e}")
