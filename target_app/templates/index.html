@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseChat - Real-Time Web & Audio Messenger</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <div id="app" class="app-container">
+        <!-- Auth Screen (when not logged in) -->
+        <div id="auth-screen" class="auth-wrapper" data-testid="auth-screen">
+            <div class="auth-card" id="login-card">
+                <div class="auth-header">
+                    <div class="logo-icon">⚡</div>
+                    <h2>PulseChat</h2>
+                    <p class="subtitle">Enterprise Real-Time Media Messaging</p>
+                </div>
+                <div class="form-group">
+                    <label for="username-input">Username</label>
+                    <input type="text" id="username-input" data-testid="username-input" placeholder="e.g. alex, sarah, qa_automator" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password-input">Password</label>
+                    <input type="password" id="password-input" data-testid="password-input" placeholder="••••••••" autocomplete="current-password">
+                </div>
+                <div id="login-error" class="error-msg" data-testid="login-error" style="display: none;"></div>
+                <button id="login-button" class="btn btn-primary" data-testid="login-button">Sign In</button>
+                <div class="auth-footer">
+                    <small>Default test credentials: <code>qa_automator / securepass</code></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat App Interface -->
+        <div id="main-screen" class="chat-layout" data-testid="main-screen" style="display: none;">
+            <!-- Left Sidebar -->
+            <aside class="sidebar" data-testid="sidebar">
+                <header class="sidebar-header">
+                    <div class="user-profile">
+                        <div class="avatar" id="current-user-avatar">QA</div>
+                        <div class="user-info">
+                            <span class="user-name" id="current-user-name" data-testid="current-user-name">User</span>
+                            <span class="status-indicator online">Online</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button id="stress-toggle-btn" class="icon-btn" title="Diagnostics & Telemetry" data-testid="stress-toggle-btn">⚙️</button>
+                        <button id="logout-button" class="icon-btn" title="Logout" data-testid="logout-button">🚪</button>
+                    </div>
+                </header>
+
+                <div class="search-bar">
+                    <input type="text" id="channel-search-input" data-testid="channel-search-input" placeholder="Search channels...">
+                </div>
+
+                <div class="channels-section">
+                    <h3>CHANNELS</h3>
+                    <ul class="channel-list" id="channel-list" data-testid="channel-list">
+                        <li class="channel-item active" data-room="general" data-testid="channel-general">
+                            <span class="hash">#</span> general
+                        </li>
+                        <li class="channel-item" data-room="qa-testing" data-testid="channel-qa-testing">
+                            <span class="hash">#</span> qa-testing
+                        </li>
+                        <li class="channel-item" data-room="media-tts" data-testid="channel-media-tts">
+                            <span class="hash">#</span> media-tts
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Telemetry & Resource Diagnostics Widget -->
+                <div class="telemetry-widget" id="telemetry-widget" data-testid="telemetry-widget">
+                    <div class="telemetry-header">
+                        <span>Host Telemetry</span>
+                        <span id="telemetry-pulse" class="pulse-dot"></span>
+                    </div>
+                    <div class="telemetry-metrics">
+                        <div class="metric">
+                            <span class="metric-label">App CPU</span>
+                            <span class="metric-val" id="metric-cpu" data-testid="metric-cpu">0.0%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">RSS RAM</span>
+                            <span class="metric-val" id="metric-ram" data-testid="metric-ram">0 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <main class="chat-viewport">
+                <header class="chat-header">
+                    <div class="active-channel-info">
+                        <span class="hash">#</span>
+                        <h2 id="active-channel-name" data-testid="active-channel-name">general</h2>
+                    </div>
+                    <div class="header-badges">
+                        <span class="badge" id="message-count-badge" data-testid="message-count-badge">0 msgs</span>
+                    </div>
+                </header>
+
+                <!-- Message stream container -->
+                <div class="messages-container" id="messages-container" data-testid="messages-container">
+                    <div id="messages-list" class="messages-list" data-testid="messages-list">
+                        <!-- Messages injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Diagnostics & Stress Simulation Drawer -->
+                <div class="stress-drawer" id="stress-drawer" data-testid="stress-drawer" style="display: none;">
+                    <div class="stress-card">
+                        <h4>Controlled Resource Stress Benchmarking</h4>
+                        <p>Trigger hardware load to validate QA telemetry monitors and threshold breaches.</p>
+                        <div class="stress-actions">
+                            <button id="stress-cpu-btn" class="btn btn-warning" data-testid="stress-cpu-btn">Burn CPU (1.5s)</button>
+                            <button id="stress-mem-btn" class="btn btn-warning" data-testid="stress-mem-btn">Allocate 30MB RAM</button>
+                            <button id="stress-reset-btn" class="btn btn-outline" data-testid="stress-reset-btn">Reset Memory</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input area -->
+                <footer class="chat-footer">
+                    <div class="input-controls">
+                        <button id="tts-open-btn" class="btn-tool" title="Text-to-Speech Synth" data-testid="tts-open-btn">
+                            🎙️ TTS
+                        </button>
+                        <input type="text" id="message-input" data-testid="message-input" placeholder="Type a message or trigger audio note..." autocomplete="off">
+                        <button id="send-button" class="btn btn-send" data-testid="send-button">
+                            <span>Send</span> 🚀
+                        </button>
+                    </div>
+                </footer>
+            </main>
+        </div>
+
+        <!-- TTS Modal for Audio pipeline test -->
+        <div id="tts-modal" class="modal-backdrop" data-testid="tts-modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Generate Audio Note (ML TTS)</h3>
+                    <button id="tts-close-btn" class="close-btn" data-testid="tts-close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tts-text-input">Speech Script</label>
+                        <textarea id="tts-text-input" data-testid="tts-text-input" rows="3" placeholder="Enter text to synthesize into real-time speech..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="tts-lang-select">Language (6 Supported Models)</label>
+                        <select id="tts-lang-select" data-testid="tts-lang-select">
+                            <option value="en">English (US)</option>
+                            <option value="de">German (Deutsch)</option>
+                            <option value="es">Spanish (Español)</option>
+                            <option value="fr">French (Français)</option>
+                            <option value="ar">Arabic (العربية)</option>
+                            <option value="ja">Japanese (日本語)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="tts-generate-btn" class="btn btn-primary" data-testid="tts-generate-btn">Synthesize & Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

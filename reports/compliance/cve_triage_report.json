@@ -1,0 +1,24 @@
+{
+  "scan_title": "PulseQA Security & Dependency CVE Triage",
+  "status": "COMPLIANT",
+  "audited_advisories": 2,
+  "vulnerabilities_found": 0,
+  "details": [
+    {
+      "cve_id": "CVE-2023-4863",
+      "affected_component": "libwebp / CEF Browser Engine",
+      "severity": "CRITICAL",
+      "cvss_score": 8.8,
+      "description": "Heap buffer overflow in WebP in Google Chrome/CEF prior to 116.0.5845.187",
+      "mitigation": "Upgraded browser dependencies and verified memory bounds."
+    },
+    {
+      "cve_id": "CVE-2023-5217",
+      "affected_component": "libvpx / CEF Video Codec",
+      "severity": "HIGH",
+      "cvss_score": 8.8,
+      "description": "Heap buffer overflow in vp8 encoding in Google Chrome/CEF prior to 117.0.5938.132",
+      "mitigation": "Patched VP8 encoder pipeline."
+    }
+  ]
+}

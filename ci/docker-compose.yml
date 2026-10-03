@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  pulseqa-runner:
+    build:
+      context: ..
+      dockerfile: ci/Dockerfile
+    container_name: pulseqa-test-engine
+    environment:
+      - BROWSER=chrome
+      - HEADLESS=true
+      - TESTRAIL_ENABLED=true
+      - TESTRAIL_MOCK_MODE=true
+    volumes:
+      - ../reports:/app/reports
+    command: ["pytest", "-v", "--html=reports/docker_test_report.html", "--self-contained-html"]

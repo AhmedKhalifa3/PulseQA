@@ -1,0 +1,105 @@
+pipeline {
+    agent any
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        ansiColor('xterm')
+    }
+
+    environment {
+        PYTHONUNBUFFERED = '1'
+        BROWSER = 'chrome'
+        HEADLESS = 'true'
+        TESTRAIL_ENABLED = 'true'
+        TESTRAIL_MOCK_MODE = 'true'
+        TESTRAIL_PROJECT_ID = '1'
+        TESTRAIL_SUITE_ID = '101'
+    }
+
+    stages {
+        stage('Environment Preparation') {
+            steps {
+                echo "=== PulseQA CI/CD Pipeline Initialized ==="
+                sh '''
+                    python3 -m venv .venv
+                    . .venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Linting & Static Analysis') {
+            steps {
+                sh '''
+                    . .venv/bin/activate
+                    ruff check .
+                '''
+            }
+        }
+
+        stage('Security & SPDX Compliance') {
+            steps {
+                sh '''
+                    . .venv/bin/activate
+                    python3 security_compliance/spdx_generator.py
+                    python3 security_compliance/cve_checker.py
+                '''
+            }
+        }
+
+        stage('Parallel Multi-Platform Test Execution') {
+            parallel {
+                stage('API Contract & Stress Tests') {
+                    steps {
+                        sh '''
+                            . .venv/bin/activate
+                            pytest tests/api -v --html=reports/api_report.html --self-contained-html
+                        '''
+                    }
+                }
+
+                stage('Web UI & POM Regression') {
+                    steps {
+                        sh '''
+                            . .venv/bin/activate
+                            pytest tests/web -v --html=reports/web_report.html --self-contained-html
+                        '''
+                    }
+                }
+
+                stage('Mobile Appium Suite') {
+                    steps {
+                        sh '''
+                            . .venv/bin/activate
+                            pytest tests/mobile -v --html=reports/mobile_report.html --self-contained-html
+                        '''
+                    }
+                }
+
+                stage('Resource Consumption Telemetry') {
+                    steps {
+                        sh '''
+                            . .venv/bin/activate
+                            pytest tests/performance -v --html=reports/perf_report.html --self-contained-html
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'reports/**/*', allowEmptyArchive: true
+            echo "Archived test reports, screenshots, and telemetry performance curves."
+        }
+        success {
+            echo "All PulseQA test suites passed successfully and synchronized with TestRail."
+        }
+        failure {
+            echo "Pipeline failed. Review screenshots in reports/screenshots/ for failure triage."
+        }
+    }
+}

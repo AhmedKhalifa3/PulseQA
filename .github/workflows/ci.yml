@@ -1,0 +1,64 @@
+name: PulseQA CI/CD Engine
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test-orchestration:
+    name: Multi-Platform Test Execution & Telemetry
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install System Dependencies & Google Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget curl unzip libxi6 libgconf-2-4 libnss3
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install Python Framework Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Code Quality & Linting
+        run: |
+          ruff check .
+
+      - name: SPDX 2.3 SBOM & Vulnerability Triage
+        run: |
+          python security_compliance/spdx_generator.py
+          python security_compliance/cve_checker.py
+
+      - name: Execute Full Test Regression Suite
+        env:
+          HEADLESS: "true"
+          BROWSER: "chrome"
+          TESTRAIL_ENABLED: "true"
+          TESTRAIL_MOCK_MODE: "true"
+        run: |
+          pytest -v --html=reports/full_regression_report.html --self-contained-html
+
+      - name: Archive Test Reports & Resource Telemetry Curves
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulseqa-test-artifacts
+          path: |
+            reports/
+          retention-days: 14
