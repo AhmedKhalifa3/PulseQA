@@ -37,6 +37,6 @@ logs/
 .DS_Store
 
 # WebDrivers & Browsers
-drivers/
+/drivers/
 ~/.wdm/
 
