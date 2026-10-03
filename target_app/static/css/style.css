@@ -388,41 +388,6 @@ body {
     color: #e0f2fe;
 }
 
-.audio-player-box {
-    margin-top: 6px;
-}
-
-.audio-player-box audio {
-    width: 260px;
-    height: 36px;
-    outline: none;
-}
-
-.audio-actions {
-    margin-top: 6px;
-    display: flex;
-    gap: 8px;
-}
-
-.btn-voice-read {
-    background: #0284c7;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 5px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: background 0.15s ease;
-}
-
-.btn-voice-read:hover {
-    background: #0369a1;
-}
-
 /* Stress simulation drawer */
 .stress-drawer {
     padding: 12px 20px;
@@ -454,17 +419,6 @@ body {
     gap: 10px;
 }
 
-.btn-tool {
-    padding: 10px 14px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-}
-
 .input-controls input {
     flex: 1;
     padding: 10px 16px;
@@ -484,47 +438,4 @@ body {
     background: var(--accent);
     color: #0f172a;
     padding: 10px 20px;
-}
-
-/* Modal */
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-}
-
-.modal-content {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    width: 440px;
-    padding: 24px;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.close-btn {
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    color: var(--text-secondary);
-    cursor: pointer;
-}
-
-.modal-footer {
-    margin-top: 16px;
-    display: flex;
-    justify-content: flex-end;
 }

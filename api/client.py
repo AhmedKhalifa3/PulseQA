@@ -4,11 +4,10 @@ Includes contract validation, payload logging, and authentication state manageme
 """
 
 import logging
-from typing import Any, Dict, Optional
 
 import httpx
 
-from api.schemas import LoginResponse, RoomMessagesResponse, SystemHealthResponse, TTSResponse
+from api.schemas import LoginResponse, RoomMessagesResponse, SystemHealthResponse
 from core.config import settings
 
 logger = logging.getLogger("PulseQA.ApiClient")
@@ -52,9 +51,6 @@ class PulseApiClient:
 
     def send_message(self, room: str, text: str) -> httpx.Response:
         return self._client.post("/api/chat/messages", json={"room": room, "text": text})
-
-    def synthesize_audio(self, text: str, language: str = "en") -> httpx.Response:
-        return self._client.post("/api/audio/synthesize", json={"text": text, "language": language})
 
     def get_health(self) -> httpx.Response:
         return self._client.get("/api/system/health")

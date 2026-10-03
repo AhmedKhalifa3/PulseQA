@@ -3,7 +3,7 @@
 <div align="center">
 
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-Passing-emerald?style=for-the-badge&logo=githubactions)
-![Tests](https://img.shields.io/badge/Tests-26%20Passed-blue?style=for-the-badge&logo=pytest)
+![Tests](https://img.shields.io/badge/Tests-18%20Passed-blue?style=for-the-badge&logo=pytest)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python)
 ![Selenium](https://img.shields.io/badge/Selenium-4.x-orange?style=for-the-badge&logo=selenium)
 ![Appium](https://img.shields.io/badge/Appium-Android-purple?style=for-the-badge&logo=appium)
@@ -22,7 +22,7 @@
 | :--- | :--- |
 | **Python Test Automation Platform (Selenium, Appium, Pytest)** | Unified Pytest framework driving Selenium (`core/drivers/web_driver_factory.py`), Appium (`core/drivers/mobile_driver_factory.py`), Page Object Models (`pages/`), and robust explicit waits (`pages/base_page.py`). |
 | **Resource Consumption Framework (Browser CPU & Memory)** | Autonomous background telemetry engine (`telemetry/monitor.py`), Chrome DevTools Protocol metrics extractor (`telemetry/cdp_metrics.py`), SLA threshold assertions (`telemetry/thresholds.py`), and telemetry chart visualizer (`telemetry/visualizer.py`). |
-| **Text-to-Speech (TTS) Real-Time Audio Pipeline in 6 Languages** | End-to-end audio synthesis verification across 6 languages (`en`, `de`, `es`, `fr`, `ar`, `ja`), validating audio byte streaming, sample rates, and HTML5 audio player rendering (`tests/api/test_stress_api.py`, `tests/web/test_media_playback.py`). |
+| **Real-Time WebSocket & REST Messaging Engine** | End-to-end multi-channel communication verification, validating token-based authentication, WebSocket state synchronization, broadcast integrity, and Pydantic response contract validation (`tests/api/test_chat_api.py`, `tests/web/test_chat_messaging.py`). |
 | **CI/CD Test Orchestration & TestRail Integration** | Declarative multi-stage `Jenkinsfile`, GitHub Actions workflow (`.github/workflows/ci.yml`), Docker containerization (`ci/Dockerfile`), and custom Pytest TestRail sync plugin (`integrations/testrail/`). |
 | **CEF CVE Triage & SPDX License Compliance Pipeline** | Automated SPDX 2.3 JSON Software Bill of Materials (SBOM) generator (`security_compliance/spdx_generator.py`) and vulnerability advisory triage scanner (`security_compliance/cve_checker.py`). |
 | **Regression Optimization (2h vs 2+ Days)** | Parallel test execution with dynamic port allocation, zero-sleep explicit wait strategies, session-scoped backend daemon, and headless execution grids. |
@@ -57,7 +57,7 @@ flowchart TD
     subgraph TargetAppLayer ["PulseChat Target Application (Bundled)"]
         WebApp["Responsive Web UI (Channels & Chat)"]
         FastAPIServer["FastAPI + WebSockets Backend"]
-        AudioService["ML TTS Speech Synthesis Service"]
+        WebSocketService["Real-Time WebSocket Sync Engine"]
         StressService["CPU & Memory Stress Endpoints"]
     end
 
@@ -84,9 +84,9 @@ Directly reproducing the production resource monitoring system:
 - **Mobile UI**: Appium Android driver factory supporting Chrome mobile browser, native applications, and offline CI/CD mock sessions.
 - **API Engine**: Synchronous and asynchronous HTTPX client validating request schemas, auth tokens, and WebSocket streams.
 
-### 3. Audio & Speech Synthesis Pipeline Testing
-- Validates real-time audio note generation and streaming across **6 languages** (`en`, `de`, `es`, `fr`, `ar`, `ja`).
-- Tests audio conversion headers, sample rates (16kHz), duration calculations, and frontend HTML5 audio controls.
+### 3. Real-Time Communication & Contract Testing
+- Validates bidirectional WebSocket synchronization and instant message broadcast across concurrent channels.
+- Pydantic contract validation verifying schema stability across authentication, messaging, and health telemetry endpoints.
 
 ### 4. Enterprise Test Management (TestRail v2)
 - Inspects `@pytest.mark.testrail(case_id=...)` decorators.
@@ -122,7 +122,7 @@ qa_framework/
 ├── pages/                     # Page Object Model (POM) Layer
 │   ├── base_page.py           # Robust explicit waits, interactions & screenshot hooks
 │   ├── login_page.py          # Authentication POM
-│   ├── chat_page.py           # Multi-room chat, audio notes, stress trigger POM
+│   ├── chat_page.py           # Multi-room chat & stress trigger POM
 │   └── settings_page.py       # Diagnostics and telemetry POM
 ├── api/                       # API Test Layer
 │   ├── client.py              # HTTPX REST & WebSocket client
@@ -139,12 +139,12 @@ qa_framework/
 │   ├── spdx_generator.py      # SPDX 2.3 SBOM JSON generator
 │   └── cve_checker.py         # CVE vulnerability audit scanner
 ├── target_app/                # Self-Contained Target Application (PulseChat)
-│   ├── app.py                 # FastAPI backend, WebSockets, TTS audio simulation
+│   ├── app.py                 # FastAPI backend, WebSockets, & stress simulation
 │   ├── templates/             # Responsive HTML5 chat UI
 │   └── static/                # Modern CSS dark theme & client JavaScript
 ├── tests/                     # Automated Test Suites
 │   ├── conftest.py            # Global fixtures (dynamic port, drivers, telemetry)
-│   ├── api/                   # REST, WebSocket, multilingual TTS tests
+│   ├── api/                   # REST & WebSocket API contract tests
 │   ├── web/                   # Selenium Web UI POM regression tests
 │   ├── mobile/                # Appium Android & responsive tests
 │   └── performance/           # Hardware telemetry & SLA assertion tests
@@ -181,7 +181,7 @@ pip install -r requirements.txt
 The target application starts automatically in the background on a dynamic available port—zero manual setup required:
 
 ```bash
-# Run all 26 automated tests (API, Web, Mobile, Performance)
+# Run all automated tests (API, Web, Mobile, Performance)
 pytest -v
 ```
 

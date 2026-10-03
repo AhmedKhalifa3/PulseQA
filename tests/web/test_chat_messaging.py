@@ -28,9 +28,6 @@ class TestChatMessaging:
         self.chat_page.switch_to_channel("qa-testing")
         assert self.chat_page.get_active_channel_title() == "qa-testing"
 
-        self.chat_page.switch_to_channel("media-tts")
-        assert self.chat_page.get_active_channel_title() == "media-tts"
-
         self.chat_page.switch_to_channel("general")
         assert self.chat_page.get_active_channel_title() == "general"
 

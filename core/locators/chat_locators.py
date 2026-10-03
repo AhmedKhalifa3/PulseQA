@@ -10,7 +10,6 @@ class ChatLocators:
     CHANNEL_LIST = (By.CSS_SELECTOR, "[data-testid='channel-list']")
     CHANNEL_GENERAL = (By.CSS_SELECTOR, "[data-testid='channel-general']")
     CHANNEL_QA_TESTING = (By.CSS_SELECTOR, "[data-testid='channel-qa-testing']")
-    CHANNEL_MEDIA_TTS = (By.CSS_SELECTOR, "[data-testid='channel-media-tts']")
     ACTIVE_CHANNEL_NAME = (By.CSS_SELECTOR, "[data-testid='active-channel-name']")
     MESSAGE_COUNT_BADGE = (By.CSS_SELECTOR, "[data-testid='message-count-badge']")
 
@@ -20,15 +19,6 @@ class ChatLocators:
     ALL_MESSAGES = (By.CSS_SELECTOR, ".message-item")
     MESSAGE_INPUT = (By.CSS_SELECTOR, "[data-testid='message-input']")
     SEND_BUTTON = (By.CSS_SELECTOR, "[data-testid='send-button']")
-
-    # Audio & TTS
-    TTS_OPEN_BUTTON = (By.CSS_SELECTOR, "[data-testid='tts-open-btn']")
-    TTS_MODAL = (By.CSS_SELECTOR, "[data-testid='tts-modal']")
-    TTS_TEXT_INPUT = (By.CSS_SELECTOR, "[data-testid='tts-text-input']")
-    TTS_LANG_SELECT = (By.CSS_SELECTOR, "[data-testid='tts-lang-select']")
-    TTS_GENERATE_BUTTON = (By.CSS_SELECTOR, "[data-testid='tts-generate-btn']")
-    TTS_CLOSE_BUTTON = (By.CSS_SELECTOR, "[data-testid='tts-close-btn']")
-    ALL_AUDIO_PLAYERS = (By.CSS_SELECTOR, ".audio-player-box audio")
 
     # Diagnostics & Telemetry
     STRESS_TOGGLE_BUTTON = (By.CSS_SELECTOR, "[data-testid='stress-toggle-btn']")

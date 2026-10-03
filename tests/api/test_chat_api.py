@@ -20,7 +20,6 @@ class TestChatApi:
         rooms = res.json()["rooms"]
         assert "general" in rooms
         assert "qa-testing" in rooms
-        assert "media-tts" in rooms
 
     def test_get_messages_contract(self, api_client: PulseApiClient):
         """Validates room message payload against Pydantic schema."""

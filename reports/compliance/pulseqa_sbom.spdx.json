@@ -3,9 +3,9 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "PulseQA-Framework-Dependencies",
-  "documentNamespace": "https://pulseqa.io/spdxdocs/pulseqa-1791035260",
+  "documentNamespace": "https://pulseqa.io/spdxdocs/pulseqa-1791037107",
   "creationInfo": {
-    "created": "2026-10-03T13:47:40Z",
+    "created": "2026-10-03T14:18:27Z",
     "creators": [
       "Tool: PulseQA-SPDX-Pipeline-v2.4",
       "Person: QA Automator"
@@ -607,6 +607,17 @@
       "filesAnalyzed": false
     },
     {
+      "SPDXID": "SPDXRef-Package-allure-pytest",
+      "name": "allure-pytest",
+      "versionInfo": "2.16.2",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "https://allurereport.org/",
+      "summary": "Allure pytest integration",
+      "filesAnalyzed": false
+    },
+    {
       "SPDXID": "SPDXRef-Package-mdurl",
       "name": "mdurl",
       "versionInfo": "0.1.2",
@@ -703,6 +714,17 @@
       "copyrightText": "NOASSERTION",
       "downloadLocation": "https://github.com/Anorov/PySocks",
       "summary": "A Python SOCKS client module. See https://github.com/Anorov/PySocks for more information.",
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-Package-allure-python-commons",
+      "name": "allure-python-commons",
+      "versionInfo": "2.16.2",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "NOASSERTION",
+      "downloadLocation": "https://allurereport.org/",
+      "summary": "Contains the API for end users as well as helper functions and classes to build Allure adapters for Python test frameworks",
       "filesAnalyzed": false
     },
     {

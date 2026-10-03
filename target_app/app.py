@@ -3,18 +3,14 @@ PulseChat: High-performance target web application & API for PulseQA.
 Features:
 - Token-based & Session Authentication
 - Real-time WebSocket multi-room chat
-- Audio Note synthesis & conversion pipeline simulation (TTS)
 - Controlled CPU & Memory stress endpoints for resource profiling verification
 """
 
-import asyncio
-import base64
 import os
 import time
-from typing import Dict, List, Set
 
-from fastapi import Depends, FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -49,13 +45,10 @@ ACTIVE_TOKENS: dict[str, str] = {
 
 MESSAGES: dict[str, list[dict]] = {
     "general": [
-        {"id": 1, "user": "System", "text": "Welcome to PulseChat #general room!", "timestamp": "12:00", "audio": False}
+        {"id": 1, "user": "System", "text": "Welcome to PulseChat #general room!", "timestamp": "12:00"}
     ],
     "qa-testing": [
-        {"id": 2, "user": "System", "text": "Automation test channel ready.", "timestamp": "12:01", "audio": False}
-    ],
-    "media-tts": [
-        {"id": 3, "user": "System", "text": "TTS & Audio conversion testbed.", "timestamp": "12:02", "audio": False}
+        {"id": 2, "user": "System", "text": "Automation test channel ready.", "timestamp": "12:01"}
     ]
 }
 
@@ -66,8 +59,7 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: dict[str, set[WebSocket]] = {
             "general": set(),
-            "qa-testing": set(),
-            "media-tts": set()
+            "qa-testing": set()
         }
 
     async def connect(self, room: str, websocket: WebSocket):
@@ -98,11 +90,6 @@ class LoginRequest(BaseModel):
 class MessageRequest(BaseModel):
     room: str
     text: str
-
-class TTSRequest(BaseModel):
-    text: str
-    language: str = "en"
-    voice_speed: float = 1.0
 
 class StressRequest(BaseModel):
     duration_sec: float = 1.0
@@ -155,76 +142,11 @@ async def post_message(req: MessageRequest, request: Request):
         "id": msg_id,
         "user": username,
         "text": req.text,
-        "timestamp": time.strftime("%H:%M:%S"),
-        "audio": False
+        "timestamp": time.strftime("%H:%M:%S")
     }
     MESSAGES[req.room].append(new_msg)
     await manager.broadcast(req.room, new_msg)
     return {"status": "sent", "message": new_msg}
-
-@app.post("/api/audio/synthesize")
-async def synthesize_audio(req: TTSRequest):
-    """
-    Simulates real-time Text-to-Speech audio conversion pipeline.
-    Directly reflects user's TTS pipeline background in 6 languages.
-    """
-    supported_langs = ["en", "de", "es", "fr", "ar", "ja"]
-    if req.language not in supported_langs:
-        raise HTTPException(status_code=400, detail=f"Language '{req.language}' not supported. Supported: {supported_langs}")
-
-    # Generate authentic audible 16-bit PCM WAV audio using standard wave module
-    duration = max(1.0, min(len(req.text) * 0.08, 8.0))
-    sample_rate = 16000
-
-    # Language-tuned harmonic frequencies
-    lang_frequencies = {
-        "en": 440.0,   # A4
-        "de": 392.0,   # G4
-        "es": 523.25,  # C5
-        "fr": 493.88,  # B4
-        "ar": 349.23,  # F4
-        "ja": 587.33   # D5
-    }
-    base_freq = lang_frequencies.get(req.language, 440.0)
-
-    import io
-    import math
-    import struct
-    import wave
-
-    buf = io.BytesIO()
-    with wave.open(buf, "wb") as wf:
-        wf.setnchannels(1)      # Mono
-        wf.setsampwidth(2)      # 16-bit PCM
-        wf.setframerate(sample_rate)
-
-        n_samples = int(duration * sample_rate)
-        frames = bytearray()
-        for i in range(n_samples):
-            t = i / sample_rate
-            # Smooth envelope curve to avoid click artifacts
-            env = min(1.0, i / 600) * max(0.0, 1.0 - (i / n_samples))
-            # Harmonic chime modeling speech formant acoustics
-            sample = (
-                0.35 * math.sin(2 * math.pi * base_freq * t) +
-                0.15 * math.sin(2 * math.pi * (base_freq * 1.5) * t) +
-                0.08 * math.sin(2 * math.pi * (base_freq * 2.0) * t)
-            )
-            pcm_val = int(32767.0 * env * sample)
-            frames.extend(struct.pack("<h", max(-32768, min(32767, pcm_val))))
-        wf.writeframes(frames)
-
-    audio_bytes = buf.getvalue()
-    b64_audio = base64.b64encode(audio_bytes).decode("ascii")
-
-    return {
-        "status": "synthesized",
-        "language": req.language,
-        "sample_rate": sample_rate,
-        "characters_processed": len(req.text),
-        "duration_seconds": round(duration, 2),
-        "audio_base64": f"data:audio/wav;base64,{b64_audio}"
-    }
 
 # --- System & Stress Endpoints (for Telemetry QA) ---
 @app.get("/api/system/health")
@@ -273,8 +195,6 @@ async def websocket_endpoint(websocket: WebSocket, room: str):
             data = await websocket.receive_json()
             user = data.get("user", "Guest")
             text = data.get("text", "")
-            is_audio = data.get("audio", False)
-            audio_url = data.get("audio_url", None)
 
             if room not in MESSAGES:
                 MESSAGES[room] = []
@@ -283,9 +203,7 @@ async def websocket_endpoint(websocket: WebSocket, room: str):
                 "id": len(MESSAGES[room]) + 1,
                 "user": user,
                 "text": text,
-                "timestamp": time.strftime("%H:%M:%S"),
-                "audio": is_audio,
-                "audio_url": audio_url
+                "timestamp": time.strftime("%H:%M:%S")
             }
             MESSAGES[room].append(msg)
             await manager.broadcast(room, msg)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PulseChat - Real-Time Web & Audio Messenger</title>
+    <title>PulseChat - Real-Time Web Messenger</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -15,7 +15,7 @@
                 <div class="auth-header">
                     <div class="logo-icon">⚡</div>
                     <h2>PulseChat</h2>
-                    <p class="subtitle">Enterprise Real-Time Media Messaging</p>
+                    <p class="subtitle">Enterprise Real-Time Messaging</p>
                 </div>
                 <div class="form-group">
                     <label for="username-input">Username</label>
@@ -63,9 +63,6 @@
                         </li>
                         <li class="channel-item" data-room="qa-testing" data-testid="channel-qa-testing">
                             <span class="hash">#</span> qa-testing
-                        </li>
-                        <li class="channel-item" data-room="media-tts" data-testid="channel-media-tts">
-                            <span class="hash">#</span> media-tts
                         </li>
                     </ul>
                 </div>
@@ -124,46 +121,13 @@
                 <!-- Input area -->
                 <footer class="chat-footer">
                     <div class="input-controls">
-                        <button id="tts-open-btn" class="btn-tool" title="Text-to-Speech Synth" data-testid="tts-open-btn">
-                            🎙️ TTS
-                        </button>
-                        <input type="text" id="message-input" data-testid="message-input" placeholder="Type a message or trigger audio note..." autocomplete="off">
+                        <input type="text" id="message-input" data-testid="message-input" placeholder="Type a message..." autocomplete="off">
                         <button id="send-button" class="btn btn-send" data-testid="send-button">
                             <span>Send</span> 🚀
                         </button>
                     </div>
                 </footer>
             </main>
-        </div>
-
-        <!-- TTS Modal for Audio pipeline test -->
-        <div id="tts-modal" class="modal-backdrop" data-testid="tts-modal" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Generate Audio Note (ML TTS)</h3>
-                    <button id="tts-close-btn" class="close-btn" data-testid="tts-close-btn">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="tts-text-input">Speech Script</label>
-                        <textarea id="tts-text-input" data-testid="tts-text-input" rows="3" placeholder="Enter text to synthesize into real-time speech..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="tts-lang-select">Language (6 Supported Models)</label>
-                        <select id="tts-lang-select" data-testid="tts-lang-select">
-                            <option value="en">English (US)</option>
-                            <option value="de">German (Deutsch)</option>
-                            <option value="es">Spanish (Español)</option>
-                            <option value="fr">French (Français)</option>
-                            <option value="ar">Arabic (العربية)</option>
-                            <option value="ja">Japanese (日本語)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="tts-generate-btn" class="btn btn-primary" data-testid="tts-generate-btn">Synthesize & Send</button>
-                </div>
-            </div>
         </div>
     </div>
 

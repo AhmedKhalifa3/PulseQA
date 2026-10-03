@@ -26,14 +26,6 @@ const stressCpuBtn = document.getElementById("stress-cpu-btn");
 const stressMemBtn = document.getElementById("stress-mem-btn");
 const stressResetBtn = document.getElementById("stress-reset-btn");
 
-// TTS Modal Elements
-const ttsModal = document.getElementById("tts-modal");
-const ttsOpenBtn = document.getElementById("tts-open-btn");
-const ttsCloseBtn = document.getElementById("tts-close-btn");
-const ttsTextInput = document.getElementById("tts-text-input");
-const ttsLangSelect = document.getElementById("tts-lang-select");
-const ttsGenerateBtn = document.getElementById("tts-generate-btn");
-
 // Check for stored session
 const storedToken = sessionStorage.getItem("pulse_token");
 const storedUser = sessionStorage.getItem("pulse_user");
@@ -96,54 +88,6 @@ stressResetBtn.addEventListener("click", async () => {
         pollHealth();
     } catch (e) {
         console.error("Memory reset error:", e);
-    }
-});
-
-// TTS modal handlers
-ttsOpenBtn.addEventListener("click", () => {
-    ttsTextInput.value = messageInput.value || "Hello from PulseChat audio engine.";
-    ttsModal.style.display = "flex";
-});
-
-ttsCloseBtn.addEventListener("click", () => {
-    ttsModal.style.display = "none";
-});
-
-ttsGenerateBtn.addEventListener("click", async () => {
-    const text = ttsTextInput.value.trim();
-    const lang = ttsLangSelect.value;
-    if (!text) return;
-
-    ttsGenerateBtn.disabled = true;
-    ttsGenerateBtn.innerText = "Synthesizing...";
-
-    try {
-        const res = await fetch("/api/audio/synthesize", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: text, language: lang })
-        });
-        const data = await res.json();
-        if (res.ok) {
-            // Send synthesized audio message
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({
-                    user: currentUser,
-                    text: `[Audio Note: ${lang.toUpperCase()}] ${text}`,
-                    audio: true,
-                    audio_url: data.audio_base64
-                }));
-            }
-            ttsModal.style.display = "none";
-            ttsTextInput.value = "";
-        } else {
-            alert(data.detail || "TTS Synthesis failed");
-        }
-    } catch (e) {
-        console.error("TTS error:", e);
-    } finally {
-        ttsGenerateBtn.disabled = false;
-        ttsGenerateBtn.innerText = "Synthesize & Send";
     }
 });
 
@@ -265,8 +209,7 @@ function sendMessage() {
     if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({
             user: currentUser,
-            text: text,
-            audio: false
+            text: text
         }));
         messageInput.value = "";
     }
@@ -278,28 +221,12 @@ function renderMessage(msg) {
     msgEl.className = `message-item ${isOutgoing ? "outgoing" : "incoming"}`;
     msgEl.setAttribute("data-testid", `message-item-${msg.id}`);
 
-    let audioHtml = "";
-    if (msg.audio && msg.audio_url) {
-        const encodedText = encodeURIComponent(msg.text);
-        audioHtml = `
-            <div class="audio-player-box" data-testid="audio-player-${msg.id}">
-                <audio controls preload="auto" src="${msg.audio_url}"></audio>
-                <div class="audio-actions">
-                    <button type="button" class="btn-voice-read" onclick="readAloud(decodeURIComponent('${encodedText}'))">
-                        🗣️ Speak Voice
-                    </button>
-                </div>
-            </div>
-        `;
-    }
-
     msgEl.innerHTML = `
         <div class="message-meta">
             <span class="msg-sender" data-testid="msg-sender-${msg.id}">${escapeHtml(msg.user)}</span>
             <span class="msg-time">${msg.timestamp || ""}</span>
         </div>
         <div class="message-content" data-testid="message-text-${msg.id}">${escapeHtml(msg.text)}</div>
-        ${audioHtml}
     `;
 
     messagesList.appendChild(msgEl);
@@ -330,18 +257,4 @@ function escapeHtml(str) {
               .replace(/>/g, "&gt;")
               .replace(/"/g, "&quot;")
               .replace(/'/g, "&#039;");
-}
-
-function readAloud(text) {
-    if (!("speechSynthesis" in window)) {
-        alert("Speech synthesis is not supported by your current browser.");
-        return;
-    }
-    window.speechSynthesis.cancel();
-    // Strip '[Audio Note: XX]' tag from spoken output
-    const cleanText = text.replace(/^\[Audio Note: [A-Z]+\]\s*/, "");
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    window.speechSynthesis.speak(utterance);
 }

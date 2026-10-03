@@ -1,12 +1,9 @@
 """
 Chat Page Object encapsulating multi-channel communication,
-audio note / TTS generation, and real-time messaging interactions.
+real-time messaging interactions, and diagnostic controls.
 """
 
 import time
-from typing import List, Tuple
-
-from selenium.webdriver.support.ui import Select
 
 from core.locators.chat_locators import ChatLocators
 from core.locators.login_locators import LoginLocators
@@ -28,8 +25,6 @@ class ChatPage(BasePage):
             self.click(ChatLocators.CHANNEL_GENERAL)
         elif channel_name_clean == "qa-testing":
             self.click(ChatLocators.CHANNEL_QA_TESTING)
-        elif channel_name_clean == "media-tts":
-            self.click(ChatLocators.CHANNEL_MEDIA_TTS)
         else:
             raise ValueError(f"Unknown channel: {channel_name}")
 
@@ -49,25 +44,6 @@ class ChatPage(BasePage):
     def get_all_message_texts(self) -> list[str]:
         items = self.find_all(ChatLocators.ALL_MESSAGES)
         return [item.text for item in items]
-
-    def synthesize_and_send_audio(self, script_text: str, language: str = "en") -> "ChatPage":
-        """Interacts with the ML TTS modal to trigger audio synthesis and broadcasting."""
-        self.click(ChatLocators.TTS_OPEN_BUTTON)
-        self.wait_for_element_visible(ChatLocators.TTS_MODAL)
-
-        self.type_text(ChatLocators.TTS_TEXT_INPUT, script_text)
-
-        lang_dropdown = Select(self.find(ChatLocators.TTS_LANG_SELECT))
-        lang_dropdown.select_by_value(language)
-
-        self.click(ChatLocators.TTS_GENERATE_BUTTON)
-        self.wait_for_element_invisible(ChatLocators.TTS_MODAL, timeout=10)
-        time.sleep(0.5)
-        return self
-
-    def get_audio_players_count(self) -> int:
-        players = self.find_all(ChatLocators.ALL_AUDIO_PLAYERS)
-        return len(players)
 
     def toggle_stress_drawer(self) -> "ChatPage":
         self.click(ChatLocators.STRESS_TOGGLE_BUTTON)

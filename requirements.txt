@@ -34,3 +34,4 @@ rich>=13.7.0
 
 # Code Quality & Security Compliance
 ruff>=0.3.0
+
