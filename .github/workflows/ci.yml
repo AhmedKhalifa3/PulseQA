@@ -22,14 +22,15 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
-      - name: Install System Dependencies & Google Chrome
+      - name: Verify Google Chrome Installation
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget curl unzip libxi6 libgconf-2-4 libnss3
-          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          if ! command -v google-chrome &> /dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y wget curl unzip libxi6 libgconf-2-4 libnss3
+            wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
+          fi
+          google-chrome --version
 
       - name: Install Python Framework Dependencies
         run: |

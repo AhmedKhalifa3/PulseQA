@@ -166,8 +166,8 @@ qa_framework/
 ### 2. Setup Virtual Environment
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/pulseqa.git
-cd pulseqa
+git clone https://github.com/ahmed-khalifa/qa_framework.git
+cd qa_framework
 
 # Create and activate virtual environment
 python3 -m venv .venv

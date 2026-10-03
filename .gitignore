@@ -11,14 +11,20 @@ __pycache__/
 *.so
 .Python
 
-# Pytest & Coverage
+# Pytest, Allure & Coverage
 .pytest_cache/
+.ruff_cache/
 .coverage
 htmlcov/
 reports/screenshots/
 reports/telemetry/
 reports/*.html
 reports/allure-results/
+allure-results/
+
+# Logs
+*.log
+logs/
 
 # Environment Variables
 .env
@@ -28,7 +34,9 @@ reports/allure-results/
 .idea/
 *.swp
 *.swo
+.DS_Store
 
 # WebDrivers & Browsers
 drivers/
 ~/.wdm/
+
