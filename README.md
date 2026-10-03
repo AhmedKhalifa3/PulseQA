@@ -166,7 +166,7 @@ qa_framework/
 ### 2. Setup Virtual Environment
 ```bash
 # Clone the repository
-git clone https://github.com/ahmed-khalifa/qa_framework.git
+git clone https://github.com/AhmedKhalifa3/qa_framework.git
 cd qa_framework
 
 # Create and activate virtual environment
