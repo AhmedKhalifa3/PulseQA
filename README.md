@@ -102,7 +102,7 @@ Directly reproducing the production resource monitoring system:
 ## 📂 Repository Structure
 
 ```plaintext
-qa_framework/
+PulseQA/
 ├── .github/workflows/
 │   └── ci.yml                 # GitHub Actions multi-platform workflow
 ├── ci/
@@ -166,8 +166,8 @@ qa_framework/
 ### 2. Setup Virtual Environment
 ```bash
 # Clone the repository
-git clone https://github.com/AhmedKhalifa3/qa_framework.git
-cd qa_framework
+git clone https://github.com/AhmedKhalifa3/PulseQA.git
+cd PulseQA
 
 # Create and activate virtual environment
 python3 -m venv .venv
